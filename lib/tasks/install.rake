@@ -1,4 +1,5 @@
-# file_name = File.expand_path("/Library/Application\ Support/Google Sketchup 8/SketchUp/plugins")
+require 'fileutils'
+
 namespace :rbor do
   desc "Install files to run the plugin"
   task :install do
@@ -29,10 +30,13 @@ def search_for_plugin_locations
     end
   end
 
-  if File.exists? File.expand_path "../../config/filepath"
-    puts "Failover file `filepath` found in app/config/."
-    path_to_read = File.expand_path "../../config/filepath"
-    @filepath = File.open path_to_read
+  # FIXME: Fix failover function here
+  if @filepath == "" and File.exists?(File.expand_path("config/filepath"))
+    puts "\nFailover file `filepath` found in app/config/, listing"
+    path_to_read = File.expand_path "config/filepath"
+    File.open(path_to_read).each { |line| @filepath << line }
+    puts @filepath
+    puts "as the location of the Sketchup plugins folder."
   else
     "Failover does not exist."
   end
@@ -47,22 +51,31 @@ end
 
 
 def print_error_message
-  puts "\nInstalling support file `rbor.rb` to #{ filepath }"
-  puts "`rbor.rb` loads the files in this repo into Sketchup for use at runtime."
-
   puts "\nERROR: We couldn't find the plugins folder in the usual location."
   puts "Open Sketchup, select Window > Ruby Console, and run:"
   puts "\n"
-  puts "\t\tSketchup.find_support file \"plugins\""
+  puts "\tSketchup.find_support file \"plugins\""
   puts "\n"
   puts "Copy and paste the result into a new file in app/config/"
-  puts "named `plugin_location`."
+  puts "named `filepath`."
+  puts "\n"
 end
 
 
-def install_support_file_in(filepath)
-  puts "\n\tInstalled support file at"
+def install_support_file_in(filepath)  
+  source      = File.expand_path "config/rbor_support.rb"
+  destination = File.expand_path filepath
+  
+  FileUtils.cp(source, destination)
+  puts "\n\tAttempted to install support file at"
   puts "\t#{filepath}.\n\n"
+
+  if File.exists? File.expand_path(destination, "rbor_support.rb")
+    puts "\tInstallation of support file `rbor_support` was successful!"
+    puts "\n\tNow open Sketchup and get growing!!"
+    puts "\n"
+  end
+  
 end
 
 
