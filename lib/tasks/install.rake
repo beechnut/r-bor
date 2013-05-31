@@ -5,8 +5,10 @@ namespace :rbor do
   task :install do
 
     @filepath = ""
+    @my_path = FileUtils.pwd
 
     puts "R-BOR by beechnut (http://github.com/beechnut)"
+    puts "Codebase located at #{@my_path}."
 
     search_for_plugin_locations
   end
@@ -71,6 +73,12 @@ def install_support_file_in(filepath)
   puts "\t#{filepath}.\n\n"
 
   if File.exists? File.expand_path(destination, "rbor_support.rb")
+    puts "\tAttempting to edit file."
+    file_to_edit = destination + "/rbor_support.rb"
+    f = File.open(file_to_edit, "a+")
+    f << "\nrequire '#{@my_path}'"
+    f.close
+    
     puts "\tInstallation of support file `rbor_support` was successful!"
     puts "\n\tNow open Sketchup and get growing!!"
     puts "\n"
