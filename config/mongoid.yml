@@ -1,0 +1,6 @@
+development:
+  sessions:
+    default:
+      database: rbor
+      hosts:
+        - localhost:27017
