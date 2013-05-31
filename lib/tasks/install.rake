@@ -76,7 +76,7 @@ def install_support_file_in(filepath)
     puts "\tAttempting to edit file."
     file_to_edit = destination + "/rbor_support.rb"
     f = File.open(file_to_edit, "a+")
-    f << "\nrequire '#{@my_path}'"
+    f << "Dir[\"#{@my_path}/app/**/*.rb\"].each { |f| load(f) }"
     f.close
     
     puts "\tInstallation of support file `rbor_support` was successful!"

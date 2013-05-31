@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'mongoid',  '3.1.4'
-gem 'bson_ext', '1.8.5'
+gem 'mongoid'
+gem 'bson_ext'
 
-gem 'rake', '10.0.4'
+gem 'rake'
 
 group :development do
-  gem 'foreman', '0.63.0'
+  gem 'foreman'
 end
